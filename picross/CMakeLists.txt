@@ -15,5 +15,5 @@ file(GLOB SOURCES
 add_executable(Picross ${SOURCES})
 target_link_libraries(Picross ${SDL2_LIBRARIES})
 
-set(CMAKE_BUILD_TYPE Debug)
+#set(CMAKE_BUILD_TYPE Debug)
 

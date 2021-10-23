@@ -10,7 +10,7 @@
 
 Renderer::Renderer(std::size_t screen_width, std::size_t screen_height):_screen_width(screen_width), _screen_height(screen_height), _xCenter(screen_width/2), _yCenter(screen_height/2) {
   SDL_Init(SDL_INIT_VIDEO);
-
+  //standard initialization of SDL window
   _window = SDL_CreateWindow(
     "Picross",
     SDL_WINDOWPOS_CENTERED,
@@ -25,21 +25,21 @@ Renderer::Renderer(std::size_t screen_width, std::size_t screen_height):_screen_
   SDL_RenderClear(_renderer);
   SDL_RenderPresent(_renderer);
 }
-
+//Standard deconstructor of SDL window
 Renderer::~Renderer(){
   SDL_DestroyWindow(_window);
   SDL_Quit();
 }
-
+//Load parameters based on the board that won't change during the render loop
 void Renderer::LoadBoard(Board* board){
   _board = board;
   _tiles.resize(_board->size());
-
+  //blockSize dependent on number of tiles
   _blockSize = 150/_board->rows();
 
   SDL_Rect* curTile;
-  //double xOffset = (r-board->rows()/2)*100;
-
+  
+  //iterate through tiles and set their locations and sizes
   for(int r=0;r<_board->rows();r++){
     for(int c=0;c<_board->cols();c++){
       curTile=&(_tiles[board->idx(r,c)]);
@@ -50,19 +50,19 @@ void Renderer::LoadBoard(Board* board){
       curTile->x=_xCenter+((c-1)*_blockSize)-_blockSize/2;
       curTile->y=_yCenter+((r-1)*_blockSize)-_blockSize/2;
     }
-  }
+  }//set up corners of board for reference
   _boardMaxX = _tiles[board->idx(board->rows()-1,board->cols()-1)].x+_blockSize;
   _boardMaxY = _tiles[board->idx(board->rows()-1,board->cols()-1)].y+_blockSize;
   _boardMinX = _tiles[board->idx(0,0)].x;
   _boardMinY = _tiles[board->idx(0,0)].y;
 
 }
-
+//main render function
 void Renderer::Render(){
-
+  //clear screen to white
   SDL_SetRenderDrawColor(_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
   SDL_RenderClear(_renderer);
-
+  //initialize vector of pointers to deallocate at end of render
   std::vector<SDL_Surface*> images;
   std::vector<SDL_Texture*> textures;
 
@@ -81,8 +81,8 @@ void Renderer::Render(){
   for(size_t i=0; i<_board->cols();i++){
     drawColGuide(_board->calcColGuideNum(i), i, images, textures);
   }
-  SDL_RenderPresent(_renderer);
-
+  SDL_RenderPresent(_renderer);//render display
+  //Deallocate data
   for(size_t i =0; i<images.size(); i++){
     SDL_FreeSurface(images[i]);
   }
@@ -90,27 +90,27 @@ void Renderer::Render(){
     SDL_DestroyTexture(textures[i]);
   }
 }
-
+//Define how to draw a tile based on its state
 void Renderer::drawTile(SDL_Rect* tile, double tileSize, Board::State state){
   switch(state){
     case (Board::State::Solve):
-      //std::cout<<"State is Solve"<<std::endl;
+      //Black fill
       SDL_SetRenderDrawColor(_renderer, 0x00, 0x00, 0x00, 0xFF);
       SDL_RenderFillRect(_renderer, tile);
       break;
     case (Board::State::Blank):
-      //std::cout<<"State is Blank"<<std::endl;
+      //Box outline
       SDL_SetRenderDrawColor(_renderer, 0x00, 0x00, 0x00, 0xFF);
       SDL_RenderDrawRect(_renderer, tile);
       break;
     case (Board::State::Mark):
-      //std::cout<<"State is Mark"<<std::endl;
+      //Red fill
       SDL_SetRenderDrawColor(_renderer, 0xFF, 0x00, 0x00, 0xFF);
       SDL_RenderFillRect(_renderer, tile);
       break;
   }
 }
-
+//Render row guides to screen
 void Renderer::drawRowGuide(std::vector<int> rowGuide, std::size_t idx, std::vector<SDL_Surface*>& images, std::vector<SDL_Texture*>& textures){
   std::size_t counter = 0;
   
@@ -142,7 +142,7 @@ void Renderer::drawRowGuide(std::vector<int> rowGuide, std::size_t idx, std::vec
     }
   }
 }
-
+//Render column guides to screen
 void Renderer::drawColGuide(std::vector<int> colGuide, std::size_t idx, std::vector<SDL_Surface*>& images, std::vector<SDL_Texture*>& textures){
   std::size_t counter = 0;
   
@@ -173,23 +173,17 @@ void Renderer::drawColGuide(std::vector<int> colGuide, std::size_t idx, std::vec
       counter++;
     }
   }
-}
+}//Convet a screen position to a row and column on the board
 void Renderer::MousePosToGame(std::size_t x, std::size_t y){
   if((x>_boardMinX) && (x<_boardMaxX) && (y>_boardMinY) && (y<_boardMaxY)){
-    //std::cout<<"On board!"<<std::endl;
+    //If position is within the bounds of the board
     int rowSize =(_boardMaxX-_boardMinX)/_board->rows();
     int colSize =(_boardMaxY-_boardMinY)/_board->cols();
 
     int r = (y-_boardMinY)/colSize;
     int c = (x-_boardMinX)/rowSize;
-    
-
-    //std::cout<<"Tile "<<r<<", "<<c<<std::endl;
 
     _board->makeGuess(r,c);
-
-
   }
-
 }
 

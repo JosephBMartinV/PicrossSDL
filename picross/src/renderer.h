@@ -8,7 +8,7 @@
 #include "board.h"
 
 class Renderer{
-    public:
+    public://Public member functions
         Renderer(std::size_t screen_width, std::size_t screen_height);
         ~Renderer();
 
@@ -19,7 +19,7 @@ class Renderer{
         void drawColGuide(std::vector<int> colGuide, std::size_t idx, std::vector<SDL_Surface*>& images, std::vector<SDL_Texture*>& textures);
         void MousePosToGame(std::size_t x, std::size_t y);
 
-    private:
+    private://Private member variables
     SDL_Window* _window;
     SDL_Renderer* _renderer;
 
@@ -31,12 +31,11 @@ class Renderer{
     Board* _board;
     std::vector<SDL_Rect> _tiles;
 
-  std::size_t _blockSize;
-  std::size_t _boardMaxX;
-  std::size_t _boardMaxY;
-  std::size_t _boardMinX;
-  std::size_t _boardMinY;
-
+    std::size_t _blockSize;
+    std::size_t _boardMaxX;
+    std::size_t _boardMaxY;
+    std::size_t _boardMinX;
+    std::size_t _boardMinY;
 };
 
 #endif
