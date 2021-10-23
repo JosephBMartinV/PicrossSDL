@@ -6,11 +6,11 @@
 
 class Board{
     public:
-        Board(int s);
+        Board(int s);//overloaded constructors
         Board(int r, int c);
         
-        enum State {Solve=0, Blank, Mark};
-        
+        enum State {Solve=0, Blank, Mark};//enumeration for board state
+        //getter functions
         int rows();
         int cols();
         int size();

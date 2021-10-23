@@ -16,14 +16,14 @@ Board::Board(int s){
     setBoard();
 }
 
-//constructor for rect board
+//constructor for rect board (planned, but unused)
 Board::Board(int r, int c){
     rows_=abs(r);
     cols_=abs(c);
 
     setBoard();
 }
-
+//getter functions
 int Board::rows(){
     return rows_;
 }
@@ -35,7 +35,7 @@ int Board::cols(){
 int Board::size(){
     return rows_*cols_;
 }
-
+//allows for easy 2D indexing of 1D vector
 int Board::idx(int r, int c){
     return r*rows()+c;
 }
@@ -49,7 +49,7 @@ void Board::setBoard(){
     colGuides.resize(cols());
     guideSize_=rows()+1;
 
-    //initialize board state to all Blank (why does fill not work?)
+    //initialize board state to all Blank
     for(size_t i=0;i<size();i++){
         state_[i]=Blank;
     }
@@ -74,7 +74,7 @@ void Board::setBoard(){
     }
 
 }
-
+//printing top guides to console (debugging)
 void Board::printTop(){
     std::string blankFill;
     blankFill.resize(guideSize_,' ');
@@ -89,7 +89,7 @@ void Board::printTop(){
     }
     std::cout<<std::endl;
 }
-
+//Print solution to console (debugging)
 void Board::printSolution(){
     printTop();
     for(size_t i=0;i<rows();i++){
@@ -106,7 +106,7 @@ void Board::printSolution(){
     }
     std::cout<<std::endl;
 }
-
+//Print state of board to console (debugging)
 void Board::printState(){
     printTop();
     for(size_t i=0;i<rows();i++){
@@ -122,7 +122,7 @@ void Board::printState(){
     }
     std::cout<<std::endl;
 }
-
+//Change tile state to solve if correct guess and mark if incorrect
 void Board::makeGuess(int r, int c){
     int id = idx(r,c);
     if(solution_[id]){
@@ -132,7 +132,7 @@ void Board::makeGuess(int r, int c){
         state_[id] = Mark;
     }
 }
-
+//check if board is solved
 bool Board::checkSolution(){
     for(size_t i=0; i<size(); i++){
         if(solution_[i]){
@@ -142,7 +142,7 @@ bool Board::checkSolution(){
     }
     return true;
 }
-
+//generate a string for printing the row guide to console
 std::string Board::calcRowGuideString(int r){
     int counter=0;
     int id=0;
@@ -169,7 +169,7 @@ std::string Board::calcRowGuideString(int r){
     guide.resize(guideSize_,' ');
     return guide;
 }
-
+//generate a vector for printing the row guide to window
 std::vector<int> Board::calcRowGuideNum(int r){
     int counter=0;
     int id=0;
@@ -197,7 +197,7 @@ std::vector<int> Board::calcRowGuideNum(int r){
 
     return guide;
 }
-
+//generate a string for printing the column guide to console
 std::string Board::calcColGuideString(int c){
     int counter=0;
     int id=0;
@@ -224,7 +224,7 @@ std::string Board::calcColGuideString(int c){
     guide.resize(guideSize_,' ');
     return guide;
 }
-
+//generate a vector for printing the column guide to window
 std::vector<int> Board::calcColGuideNum(int c){
     int counter=0;
     int id=0;
